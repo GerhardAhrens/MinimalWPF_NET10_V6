@@ -2,7 +2,7 @@
 {
     using System.Windows;
 
-    internal class ApplicationSettings : SmartSettingsBase
+    internal sealed class ApplicationSettings : SmartSettingsBase
     {
         public string Username { get; set; }
     }

@@ -8,6 +8,8 @@
     using System.Runtime.Versioning;
     using System.Windows.Media;
 
+    using Microsoft.Win32;
+
     [DebuggerStepThrough]
     [Serializable]
     [SupportedOSPlatform("windows")]
@@ -50,6 +52,51 @@
                 this.SetProperty(ref _IsPropertyChanged, value);
             }
         }
+
+#pragma warning disable CA1822
+        public Version ApplicationVersion 
+        { 
+            get 
+            {
+                System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+                System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+                if (string.IsNullOrWhiteSpace(fvi.FileVersion))
+                {
+                    return assembly.GetName().Version ?? new Version(1, 0, DateTime.Now.Year, 0);
+                }
+
+                if (Version.TryParse(fvi.FileVersion, out var parsed))
+                {
+                    return parsed;
+                }
+
+                return assembly.GetName().Version ?? new Version(1, 0, DateTime.Now.Year, 0);
+            }
+        }
+#pragma warning restore CA1822
+
+#pragma warning disable CA1822
+        public string RuntimeVersion
+        {
+            get 
+            {
+                string netVersion = $"{System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription}";
+                string processArchitecture = $"{System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier}";
+                return $"{netVersion} ({processArchitecture})";
+            }
+        }
+#pragma warning restore CA1822
+
+#pragma warning disable CA1822
+        public string WindowsVersion
+        {
+            get
+            {
+                string osDescription = $"{System.Runtime.InteropServices.RuntimeInformation.OSDescription}";
+                return $"{osDescription} ({GetWindowsVersionName()})";
+            }
+        }
+#pragma warning restore CA1822
 
         #region Get/Set Implementierung
         private T GetPropertyValueInternal<T>(string propertyName)
@@ -116,6 +163,35 @@
             }
         }
         #endregion Get/Set Implementierung
+
+        #region Windows Productname ermittel
+        private static string GetWindowsVersionName()
+        {
+            try
+            {
+                var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+                string currentBuildStr = (string)reg.GetValue("CurrentBuild");
+                int currentBuild = int.Parse(currentBuildStr, System.Globalization.CultureInfo.CurrentCulture);
+                if (currentBuild >= 22_000)
+                {
+                    return "Windows 11";
+                }
+                else if (currentBuild >= 10_240 && currentBuild < 22_000)
+                {
+                    return "Windows 10";
+                }
+                else
+                {
+                    return "Windows 7";
+                }
+            }
+            catch (Exception ex)
+            {
+                string errorText = ex.Message;
+                throw;
+            }
+        }
+        #endregion Windows Productname ermittel
 
         #region INotifyPropertyChanged Implementierung
         protected void SetProperty<T>(ref T oldValue, T newValue, [CallerMemberName] string property = "")

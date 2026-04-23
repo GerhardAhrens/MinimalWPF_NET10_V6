@@ -29,13 +29,16 @@ namespace MinimalWPF
             WeakEventManager<WindowBase, RoutedEventArgs>.AddHandler(this, "Loaded", this.OnLoaded);
             WeakEventManager<WindowBase, CancelEventArgs>.AddHandler(this, "Closing", this.OnWindowClosing);
 
-            this.QuitCommand = new CommandBase(this.OnQuit);
+            this.QuitCommand = new CommandBase(this.OnQuit, () => true);
             this.QuitParamCommand = new CommandBase(() => this.OnQuit("Argument"));
             this.StartCommand = new CommandBase(OnStart);
             this.InformationCommand = new CommandBase(OnInformation);
             this.CloseInformationPopupCommand = new CommandBase(OnCloseInformation);
 
             this.WindowTitel = LocalizationString.Get("WindowsTitelZeile");
+            this.ApplikationVersion = base.ApplicationVersion.ToString();
+            this.LaufzeitVersion = base.RuntimeVersion;
+            this.WinVersion = base.WindowsVersion;
             this.DataContext = this;
         }
 
@@ -46,6 +49,24 @@ namespace MinimalWPF
         public CommandBase CloseInformationPopupCommand { get; private set; }
 
         public string WindowTitel
+        {
+            get => base.GetValue<string>();
+            set => base.SetValue(value);
+        }
+
+        public string ApplikationVersion
+        {
+            get => base.GetValue<string>();
+            set => base.SetValue(value);
+        }
+
+        public string LaufzeitVersion
+        {
+            get => base.GetValue<string>();
+            set => base.SetValue(value);
+        }
+
+        public string WinVersion
         {
             get => base.GetValue<string>();
             set => base.SetValue(value);
