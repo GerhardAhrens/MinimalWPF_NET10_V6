@@ -32,8 +32,10 @@ namespace MinimalWPF
             this.QuitCommand = new CommandBase(this.OnQuit, () => true);
             this.QuitParamCommand = new CommandBase(() => this.OnQuit("Argument"));
             this.StartCommand = new CommandBase(OnStart);
-            this.InformationCommand = new CommandBase(OnInformation);
+            this.InformationCommand = new CommandBase(OnInformationPopup);
+            this.SettingsCommand = new CommandBase(OnSettingsPopup);
             this.CloseInformationPopupCommand = new CommandBase(OnCloseInformation);
+            this.CloseSettingsPopupCommand = new CommandBase(OnCloseSettingsPopup);
 
             this.WindowTitel = LocalizationString.Get("WindowsTitelZeile");
             this.ApplikationVersion = base.ApplicationVersion.ToString();
@@ -46,7 +48,9 @@ namespace MinimalWPF
         public CommandBase QuitParamCommand { get; private set; }
         public CommandBase StartCommand { get; private set; }
         public CommandBase InformationCommand { get; private set; }
+        public CommandBase SettingsCommand { get; private set; }
         public CommandBase CloseInformationPopupCommand { get; private set; }
+        public CommandBase CloseSettingsPopupCommand { get; private set; }
 
         public string WindowTitel
         {
@@ -101,7 +105,7 @@ namespace MinimalWPF
             this.Close();
         }
 
-        private void OnInformation()
+        private void OnInformationPopup()
         {
             this.InformationPopup.SetValue(MaskLayerBehavior.IsOpenProperty, true);
         }
@@ -111,6 +115,16 @@ namespace MinimalWPF
             this.InformationPopup.SetValue(MaskLayerBehavior.IsOpenProperty, false);
         }
 
+        private void OnSettingsPopup()
+        {
+            this.SettingsPopup.SetValue(MaskLayerBehavior.IsOpenProperty, true);
+        }
+
+        private void OnCloseSettingsPopup()
+        {
+            this.SettingsPopup.SetValue(MaskLayerBehavior.IsOpenProperty, false);
+        }
+
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
             e.Cancel = false;
@@ -118,11 +132,11 @@ namespace MinimalWPF
             MessageBoxResult msgYN;
             if (this.Tag != null)
             {
-                msgYN = MessageBox.Show($"Wollen Sie die Anwendung beenden? ({this.Tag})", "Beenden", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                msgYN = MessageBox.Show($"Wollen Sie die Anwendung beenden? ({this.Tag})", LocalizationString.Get("MessageExit_Titel_DE"), MessageBoxButton.YesNo, MessageBoxImage.Question);
             }
             else
             {
-                msgYN = MessageBox.Show("Wollen Sie die Anwendung beenden?", "Beenden", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                msgYN = MessageBox.Show("Wollen Sie die Anwendung beenden?", LocalizationString.Get("MessageExit_Titel_DE"), MessageBoxButton.YesNo, MessageBoxImage.Question);
             }
 
             if (msgYN == MessageBoxResult.Yes)

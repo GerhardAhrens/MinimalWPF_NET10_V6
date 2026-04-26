@@ -20,6 +20,7 @@ namespace System.Windows
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Runtime.Versioning;
 
@@ -74,6 +75,26 @@ namespace System.Windows
             string value = resourceDict.Cast<DictionaryEntry>().FirstOrDefault(f => f.Key.ToString().Equals(key, StringComparison.OrdinalIgnoreCase)).Value.ToString();
 
             return value;
+        }
+
+        public static string Get(string key, params object[] args)
+        {
+            ArgumentNullException.ThrowIfNull(key);
+
+            if (resourceDict == null)
+            {
+                return $"ResourceDictionary 'TextString.xaml' nicht gefunden.";
+            }
+
+            bool keyFound = resourceDict.Cast<DictionaryEntry>().Any(f => f.Key.ToString().Equals(key, StringComparison.OrdinalIgnoreCase));
+            if (keyFound == false)
+            {
+                return $"ResourceKey '{key}' nicht gefunden.";
+            }
+
+            string value = resourceDict.Cast<DictionaryEntry>().FirstOrDefault(f => f.Key.ToString().Equals(key, StringComparison.OrdinalIgnoreCase)).Value.ToString();
+
+            return string.Format(CultureInfo.CurrentCulture, value, args);
         }
 
         public static void SetResources(string resourceFile)

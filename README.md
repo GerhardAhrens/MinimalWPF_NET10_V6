@@ -72,10 +72,19 @@ private void OnQuit()
     this.Close();
 }
 ```
+
 ## Settings
 ```csharp
 ```
 
+## Localization
+```xml
+<system:String x:Key="WindowsTitelZeile">Minimal WPF Template NET 10; V6</system:String>
+```
+
+```csharp
+this.WindowTitel = LocalizationString.Get("WindowsTitelZeile");
+```
 
 ## StatusbarMain
 
