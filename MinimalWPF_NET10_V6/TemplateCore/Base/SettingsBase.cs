@@ -26,6 +26,7 @@ namespace System.Windows
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -35,13 +36,13 @@ namespace System.Windows
     /// <summary>
     /// Base class for settings.
     /// </summary>
-    public abstract class SmartSettingsBase : DisposableCoreBase
+    public abstract class SettingsBase : DisposableCoreBase
     {
 
         /// <summary>
-        /// Initializes an instance of <see cref="SmartSettingsBase" />.
+        /// Initializes an instance of <see cref="SettingsBase" />.
         /// </summary>
-        protected SmartSettingsBase(string filePath = "", string namePrefix = "Application")
+        protected SettingsBase(string filePath = "", string namePrefix = "Application")
         {
             this.NamePrefix = namePrefix;
 
@@ -61,7 +62,7 @@ namespace System.Windows
 
             GetProperties = GetType()
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.DeclaringType != typeof(SmartSettingsBase))
+                .Where(p => p.DeclaringType != typeof(SettingsBase))
                 .Where(p => p.CanRead && p.CanWrite)
                 .Where(p => p.GetCustomAttribute<JsonIgnoreAttribute>() is null)
                 .ToArray();
@@ -116,6 +117,22 @@ namespace System.Windows
             foreach (var property in GetProperties)
             {
                 property.SetValue(this, GetDefaults[property]);
+            }
+        }
+
+        public void SetSetting(SettingsBase settings)
+        {
+            try
+            {
+                foreach (PropertyInfo property in settings.GetProperties)
+                {
+                    property.SetValue(this, property.GetValue(settings));
+                }
+            }
+            catch (Exception ex)
+            {
+                string errorText = ex.Message;
+                throw;
             }
         }
 

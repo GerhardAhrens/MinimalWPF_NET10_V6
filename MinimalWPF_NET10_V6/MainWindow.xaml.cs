@@ -131,14 +131,20 @@ namespace MinimalWPF
         {
             e.Cancel = false;
 
+            if (App.Settings.FrageExit == false)
+            {
+                App.ApplicationExit();
+                return;
+            }
+
             MessageBoxResult msgYN;
             if (this.Tag != null)
             {
-                msgYN = MessageBox.Show($"Wollen Sie die Anwendung beenden? ({this.Tag})", LocalizationString.Get("MessageExit_Titel_DE"), MessageBoxButton.YesNo, MessageBoxImage.Question);
+                msgYN = AppMessage.AppExitMessage(this.Tag.ToString());
             }
             else
             {
-                msgYN = MessageBox.Show("Wollen Sie die Anwendung beenden?", LocalizationString.Get("MessageExit_Titel_DE"), MessageBoxButton.YesNo, MessageBoxImage.Question);
+                msgYN = AppMessage.AppExitMessage();
             }
 
             if (msgYN == MessageBoxResult.Yes)

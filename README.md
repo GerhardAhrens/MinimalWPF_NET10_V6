@@ -45,8 +45,23 @@ Die Klasse WindowBase ist eine benutzerdefinierte Basisklasse für Fenster in de
     </Grid>
 </base:WindowBase>
 ```
-## Binding Properties
+## Windows Titel Icon
+Die Methode `SetVectorIcon()` ermöglicht es, ein benutzerdefiniertes Icon für den Fenstertitel festzulegen. Das Icon wird in der Titelleiste des Fensters angezeigt und kann verwendet werden, um die Anwendung visuell zu identifizieren.
+Die Besonderheit  ist, dass die Methode `SetVectorIcon()` es ermöglicht, ein Vektor-Icon zu verwenden das auf Basis eines `DrawingImage` erstellt wird, das in der XAML-Ressourcendatei definiert ist. Dadurch können skalierbare Icons verwendet werden, die unabhängig von der Auflösung des Bildschirms scharf bleiben.
+```csharp
+this.SetVectorIcon("AppIcon2", 64);
+```
 
+## Binding Properties
+Mit `GetValue` und `SetValue` können Eigenschaften in der WindowBase-Klasse an ein WPF Property gebunden werden.
+Die Implementierung von INotifyPropertyChanged entfällt, da diese bereits in der WindowBase-Klasse implementiert ist. 
+```xml
+<base:WindowBase
+    <--- Das Property WindowTitel wird an Title gebunden --->
+    Title="{Binding Path=WindowTitel, FallbackValue=~WindowTitel}"
+
+</base:WindowBase>
+```
 ```csharp
 public string WindowTitel
 {
@@ -74,10 +89,32 @@ private void OnQuit()
 ```
 
 ## Settings
+Die SmartSettingsBase-Klasse bietet eine einfache Möglichkeit, Einstellungen in der WPF-Anwendung zu verwalten. Sie ermöglicht das Speichern und Laden von Einstellungen in einer JSON-Datei, was die Konfiguration der Anwendung erleichtert und die Benutzerfreundlichkeit verbessert.
 ```csharp
+internal sealed class ApplicationSettings : SettingsBase
+{
+    public string Username { get; set; }
+    public DateTime LetzterZugriff { get; set; }
+    public bool FrageExit { get; set; }
+}
 ```
 
+```json
+{
+  "Username": "PTA\\ahrens",
+  "LetzterZugriff": "2026-04-27T13:55:20.2908708+02:00",
+  "FrageExit": true
+}
+```
+Ein gute Stellen zum lesen der Einstellungen ist die `OnStartup()` Methode in der `App.xaml.cs` Klasse, da diese Methode aufgerufen wird, wenn das das Programm gestartet geladen wird. Dadurch können die Einstellungen direkt nach dem Laden angewendet werden.
+Zum Speichern der Einstellungen kann die `OnExit()` Methode in der `App.xaml.cs` Klasse verwendet werden, da diese Methode aufgerufen wird, wenn das Programm geschlossen wird. Dadurch können die aktuellen Einstellungen vor dem Beenden der Anwendung gespeichert werden.
+
+<img src="Settings.png" style="width:650px;"/>
+
+Die Settings werden unter `%AppData%\<Projektname>\Settings\Application.%username%.Setting` gespeichert.
+
 ## Localization
+
 ```xml
 <system:String x:Key="WindowsTitelZeile">Minimal WPF Template NET 10; V6</system:String>
 ```

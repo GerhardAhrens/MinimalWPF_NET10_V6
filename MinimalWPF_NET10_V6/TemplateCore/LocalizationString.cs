@@ -74,7 +74,7 @@ namespace System.Windows
 
             string value = resourceDict.Cast<DictionaryEntry>().FirstOrDefault(f => f.Key.ToString().Equals(key, StringComparison.OrdinalIgnoreCase)).Value.ToString();
 
-            return value;
+            return value.Replace("({0})", string.Empty).Replace("'{0}'", string.Empty);
         }
 
         public static string Get(string key, params object[] args)

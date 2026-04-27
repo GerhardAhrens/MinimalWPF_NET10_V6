@@ -24,6 +24,8 @@ namespace MinimalWPF
     using System.Windows.Markup;
     using System.Windows.Threading;
 
+    using MinimalWPF.Beispiele;
+
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
@@ -61,6 +63,8 @@ namespace MinimalWPF
             }
         }
 
+        public static ApplicationSettings Settings { get; set; }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -95,6 +99,19 @@ namespace MinimalWPF
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
+
+            Settings.LetzterZugriff = DateTime.Now;
+
+            using (ApplicationSettings settings = new ApplicationSettings())
+            {
+                if (settings.IsExitSettings() == true)
+                {
+                    settings.Load();
+                    settings.SetSetting(Settings);
+                    settings.Save();
+                }
+            }
+
         }
 
         private static void InitializeCultures(string language)
@@ -123,12 +140,22 @@ namespace MinimalWPF
 
         private static void InitializeSettings()
         {
-            /*
             using (ApplicationSettings settings = new ApplicationSettings())
             {
+                if (settings.IsExitSettings() == false)
+                {
+                    settings.Username = $"{Environment.UserDomainName}\\{Environment.UserName}";
+                    settings.LetzterZugriff = DateTime.Now;
+                    settings.FrageExit = true;
+                    settings.Save();
+                }
+                else
+                {
+                    settings.Load();
+                }
 
+                Settings = settings;
             }
-            */
         }
 
         public static void ErrorMessage(Exception ex, string message = "")
