@@ -9,7 +9,6 @@
     Title="{Binding Path=WindowTitel, FallbackValue=~WindowTitel}"
     Width="900"
     Height="600"
-    Icon="{StaticResource ResourceKey=IconCustomA2}"
     mc:Ignorable="d">
 
     <Window.Resources>
