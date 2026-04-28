@@ -18,6 +18,8 @@ namespace MinimalWPF
     using System.ComponentModel;
     using System.Windows;
 
+    using MinimalWPF.Beispiele.View;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -33,11 +35,11 @@ namespace MinimalWPF
 
             this.QuitCommand = new CommandBase(this.OnQuit, () => true);
             this.QuitParamCommand = new CommandBase(() => this.OnQuit("Argument"));
-            this.StartCommand = new CommandBase(OnStart);
-            this.InformationCommand = new CommandBase(OnInformationPopup);
-            this.SettingsCommand = new CommandBase(OnSettingsPopup);
-            this.CloseInformationPopupCommand = new CommandBase(OnCloseInformation);
-            this.CloseSettingsPopupCommand = new CommandBase(OnCloseSettingsPopup);
+            this.StartCommand = new CommandBase(this.OnStart);
+            this.InformationCommand = new CommandBase(this.OnInformationPopup);
+            this.SettingsCommand = new CommandBase(this.OnSettingsPopup);
+            this.CloseInformationPopupCommand = new CommandBase(this.OnCloseInformation);
+            this.CloseSettingsPopupCommand = new CommandBase(this.OnCloseSettingsPopup);
 
             this.WindowTitel = LocalizationString.Get("WindowsTitelZeile");
             this.ApplikationVersion = base.ApplicationVersion.ToString();
@@ -98,11 +100,14 @@ namespace MinimalWPF
 
         private void OnStart()
         {
-            this.QuitParamCommand.TryExecute();
+            DialogWindow dlg = new DialogWindow();
+            dlg.Owner = this;
+            bool? dlgResult = dlg.ShowDialog();
         }
 
         private void OnQuit(string param)
         {
+            /* this.QuitParamCommand.TryExecute(); */
             this.Tag = param;
             this.Close();
         }

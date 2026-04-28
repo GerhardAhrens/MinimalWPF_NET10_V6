@@ -32,12 +32,20 @@ namespace MinimalWPF
     public partial class App : Application
     {
         private const string DEFAULTLANGUAGE = "de-DE";
-        public const string SHORTNAME = "MinimalWPF1";
-        private static readonly string MessageBoxTitle = "MinimalWPF1 Application";
+        public const string SHORTNAME = "MinimalWPF";
+        private static readonly string MessageBoxTitle = "MinimalWPF Application";
         private static readonly string UnexpectedError = "An unexpected error occured.";
         private string exePath = string.Empty;
         private string exeName = string.Empty;
 
+        /// <summary>
+        /// Initialisiert eine neue Instanz der App-Klasse und richtet globale Anwendungsressourcen sowie
+        /// Fehlerbehandlung ein.
+        /// </summary>
+        /// <remarks>Der Konstruktor legt den Namen und Pfad der ausführbaren Datei fest, konfiguriert die
+        /// Synchronisierung von Texteingaben für Windows-Kompatibilität und registriert einen globalen Handler für
+        /// nicht abgefangene Ausnahmen auf Dispatcher-Ebene. Dies stellt sicher, dass unerwartete Fehler zentral
+        /// behandelt und angezeigt werden.</remarks>
         public App()
         {
             try
@@ -63,8 +71,21 @@ namespace MinimalWPF
             }
         }
 
+        /// <summary>
+        /// Statische Eigenschaft für die globalen Einstellungen der Anwendung, hier können alle Einstellungen gespeichert werden, 
+        /// die in der gesamten Anwendung benötigt werden, z.B. Spracheinstellung, Benutzername, etc.
+        /// </summary>
         public static ApplicationSettings Settings { get; set; }
 
+        /// <summary>
+        /// Verwaltet die Startlogik der Anwendung, einschließlich der Initialisierung der Ländereinstellungen und der Konfiguration der Benutzereinstellungen.
+        /// </summary>
+        /// <remarks>
+        /// In Debug-Builds werden zusätzliche Trace-Listener für die Datenbindung, weitergeleitete Ereignisse und Ressourcenverzeichnisse 
+        /// konfiguriert, um die Fehlersuche zu erleichtern.Ausnahmen während des Startvorgangs werden abgefangen und behandelt,
+        /// um eine korrekte Fehlermeldung und das ordnungsgemäße Herunterfahren der Anwendung sicherzustellen.
+        /// </remarks>
+        /// <param name="e">Ein Objekt, das die Ereignisdaten für das Startereignis enthält.</param>
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -96,10 +117,15 @@ namespace MinimalWPF
             }
         }
 
+        /// <summary>
+        /// Beispiel für das Speichern von Einstellungen beim Beenden der Anwendung, hier wird nur die letzte Zugriffzeit aktualisiert
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
 
+            /*
             Settings.LetzterZugriff = DateTime.Now;
 
             using (ApplicationSettings settings = new ApplicationSettings())
@@ -111,9 +137,20 @@ namespace MinimalWPF
                     settings.Save();
                 }
             }
-
+            */
         }
 
+        /// <summary>
+        /// Initialisiert die Kultur des aktuellen Threads und die UI-Kultur auf der Grundlage des angegebenen Sprachcodes.
+        /// </summary>
+        /// <remarks>
+        /// Diese Methode aktualisiert zudem die Standardsprache für WPF-Elemente, indem sie die Metadaten der „Language“-Eigenschaft 
+        /// für „FrameworkElement“ überschreibt. Dadurch wird sichergestellt, dass die Ressourcensuche und die Formatierung
+        /// in der gesamten Benutzeroberfläche der Anwendung mit der angegebenen Kultur übereinstimmen.
+        /// </remarks>
+        /// <param name="language">Eine Zeichenfolge, die das IETF-Sprachkennzeichen (z. B. „en-US“) enthält, das als aktuelle 
+        /// Kultur und UI-Kultur festgelegt werden soll. Ist der Wert null oder leer, wird die Standardsprache verwendet.
+        /// </param>
         private static void InitializeCultures(string language)
         {
             if (string.IsNullOrEmpty(language) == false)
@@ -138,8 +175,12 @@ namespace MinimalWPF
             FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), frameworkMetadata);
         }
 
+        /// <summary>
+        /// Erstellen von Standardeinstellungen, hier wird nur der Benutzername und die letzte Zugriffzeit gespeichert, weitere Einstellungen können natürlich hinzugefügt werden
+        /// </summary>
         private static void InitializeSettings()
         {
+            /* 
             using (ApplicationSettings settings = new ApplicationSettings())
             {
                 if (settings.IsExitSettings() == false)
@@ -156,8 +197,14 @@ namespace MinimalWPF
 
                 Settings = settings;
             }
+            */
         }
 
+        /// <summary>
+        /// Darstellen einer Fehlermeldung mit eventueller Exception, die Applikationsweit verwendet werden kann, um Fehler an den Benutzer anzuzeigen, z.B. bei einem unerwarteten Fehler, etc.
+        /// </summary>
+        /// <param name="ex">Die Exception, die angezeigt werden soll.</param>
+        /// <param name="message">Eine optionale Nachricht, die zusammen mit der Exception angezeigt wird.</param>
         public static void ErrorMessage(Exception ex, string message = "")
         {
             string expMsg = ex.Message;
@@ -189,6 +236,11 @@ namespace MinimalWPF
                 MessageBoxImage.Error);
         }
 
+        /// <summary>
+        /// Info Message Box. die Applikationsweit verwendet werden kann, 
+        /// um Informationen an den Benutzer anzuzeigen, z.B. nach einem erfolgreichen Speichern oder einer erfolgreichen Aktion, etc.
+        /// </summary>
+        /// <param name="message"></param>
         public static void InfoMessage(string message)
         {
             MessageBox.Show(
@@ -206,6 +258,11 @@ namespace MinimalWPF
             Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new Action(delegate { }));
         }
 
+        /// <summary>
+        /// Behandelt das Ereignis „DispatcherUnhandledException“, das auftritt, wenn im UI-Thread der Anwendung eine nicht abgefangene Ausnahme ausgelöst wird.
+        /// </summary>
+        /// <param name="sender">Die Quelle des Ereignisses, in der Regel der Anwendungs-Dispatcher.</param>
+        /// <param name="e">Ein `DispatcherUnhandledExceptionEventArgs`-Objekt, das die Ereignisdaten enthält, einschließlich der nicht behandelten Ausnahme.</param>
         private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             Debug.WriteLine($"{exeName}-{(e.Exception as Exception).Message}");
