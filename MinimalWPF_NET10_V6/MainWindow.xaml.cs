@@ -18,7 +18,7 @@ namespace MinimalWPF
     using System.ComponentModel;
     using System.Windows;
 
-    using MinimalWPF.Beispiele.View;
+    using MinimalWPF.Beispiele;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -136,11 +136,13 @@ namespace MinimalWPF
         {
             e.Cancel = false;
 
+            /*
             if (App.Settings.FrageExit == false)
             {
                 App.ApplicationExit();
                 return;
             }
+            */
 
             MessageBoxResult msgYN;
             if (this.Tag != null)
