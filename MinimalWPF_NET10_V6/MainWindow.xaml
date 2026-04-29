@@ -46,7 +46,7 @@
                     Grid.Row="0"
                     Background="#FAFAFB"
                     CornerRadius="5">
-                    <beispiel:InformationUC />
+                    <beispiel:InformationUC DataContext="{Binding Path=., RelativeSource={RelativeSource AncestorType=Window}}" />
                 </Border>
 
                 <base:IconButton
@@ -78,38 +78,11 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
-                <Border Background="#FAFAFB" CornerRadius="5">
-                    <Grid
-                        Margin="10"
-                        ColumnDefinitions="120, *"
-                        RowDefinitions="40,25,25,25">
-                        <Border
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            Margin="0,0,0,10"
-                            BorderBrush="DarkGray"
-                            BorderThickness="0,0,0,2">
-                            <TextBlock
-                                HorizontalAlignment="Left"
-                                FontSize="16"
-                                FontWeight="Bold">
-                                <Run Text="Einstellungen zu" />
-                                <Run Text="{Binding Path=WindowTitel, FallbackValue=~WindowTitel}" />
-                            </TextBlock>
-                        </Border>
-
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Text="Applikation Version" />
-
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Text="{Binding Path=ApplicationVersion, FallbackValue=~ApplicationVersion}" />
-
-                    </Grid>
+                <Border
+                    Grid.Row="0"
+                    Background="#FAFAFB"
+                    CornerRadius="5">
+                    <beispiel:SettingsUC DataContext="{Binding Path=., RelativeSource={RelativeSource AncestorType=Window}}" />
                 </Border>
 
                 <base:IconButton

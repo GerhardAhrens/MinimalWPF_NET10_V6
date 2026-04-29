@@ -13,7 +13,17 @@
             this.InitializeComponent();
             WeakEventManager<WindowBase, RoutedEventArgs>.AddHandler(this, "Loaded", this.OnLoaded);
             WeakEventManager<WindowBase, CancelEventArgs>.AddHandler(this, "Closing", this.OnWindowClosing);
+            this.WindowTitel = LocalizationString.Get("DialogWindowsTitelZeile");
+            this.DataContext = this;
         }
+
+        public string WindowTitel
+        {
+            get => base.GetValue<string>();
+            set => base.SetValue(value);
+        }
+
+        #region WindowEventHandler
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
         }
@@ -27,5 +37,6 @@
         {
             this.DialogResult = false;
         }
+        #endregion WindowEventHandler
     }
 }

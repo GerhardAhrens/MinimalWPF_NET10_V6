@@ -118,6 +118,17 @@
         }
 #pragma warning restore CA1822
 
+#pragma warning disable CA1822
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public string GetCurrentMethod(int level = 1)
+        {
+            var st = new StackTrace();
+            var sf = st.GetFrame(level);
+
+            return sf.GetMethod().Name;
+        }
+#pragma warning restore CA1822
+
         #region Get/Set Implementierung
         private T GetPropertyValueInternal<T>(string propertyName)
         {
