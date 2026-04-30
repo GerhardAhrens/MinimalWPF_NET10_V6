@@ -3,6 +3,7 @@
     <File Path="LICENSE.txt" />
     <File Path="MainWindow.png" />
     <File Path="README.md" />
+    <File Path="Settings.png" />
   </Folder>
   <Project Path="MinimalWPF_NET10_V6/MinimalWPF_NET10_V6.csproj" />
 </Solution>

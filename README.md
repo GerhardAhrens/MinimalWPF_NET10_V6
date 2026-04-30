@@ -13,6 +13,11 @@ Das Template soll als Grundlage für die Entwicklung von WPF-Anwendungen dienen 
 
 Hauptaufgabe des Templates ist es, eine solide Basis für die Entwicklung von WPF-Anwendungen als Prototyp zu bieten, damit Entwickler sich auf die Implementierung der spezifischen Funktionen ihrer Anwendung konzentrieren können, anstatt Zeit mit der Einrichtung der grundlegenden Struktur zu verbringen.
 
+# Installation
+Die Verwendung des Template ist recht einfach, da dieses nur in ein Verzeichnis kopiert werden muss, damit es in Visual Studio als Vorlage zur Verfügung steht. 
+
+`c:\_Documents\Visual Studio 18\Templates\ProjectTemplates\Visual C#\`
+
 # Features des Template
 - Inside MVVM (durch WindowsBase Klasse)
 - Dialog Popup
