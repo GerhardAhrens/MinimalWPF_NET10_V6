@@ -2,8 +2,7 @@
 {
     using System;
 
-    public abstract class SingletonBase<T>
-            where T : class
+    public abstract class SingletonBase<T> where T : class
     {
         private static readonly Lazy<T> _instance =
             new Lazy<T>(() =>

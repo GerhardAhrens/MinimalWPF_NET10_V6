@@ -23,7 +23,8 @@ Die Verwendung des Template ist recht einfach, da dieses nur in ein Verzeichnis 
 - Dialog Popup
 - IconButton
 - Localization
-- Settings in JSON File (durch SmartSettingsBase)
+- Settings in JSON File (durch SettingsBase)
+- Singleton Funktionalität (Threadsicher Zugriff auf Instanzen durch Lazy<T>) mit Initalisierung durch ISingletonInitializable Interface.
 
 Alle Klassen für das Template sind unter dem Namespace `System.Windows` organisiert.
 
@@ -128,6 +129,50 @@ Die Settings werden unter `%AppData%\<Projektname>\Settings\Application.%usernam
 this.WindowTitel = LocalizationString.Get("WindowsTitelZeile");
 ```
 
+## Singleton
+
+Die SingletonBase-Klasse bietet eine threadsichere Implementierung des Singleton-Musters. Sie stellt sicher, dass nur eine Instanz einer Klasse erstellt wird und bietet optional eine Initialisierung über das ISingletonInitializable-Interface.
+Hinweis: Die Klasse muß einen `private` oder `protected` Konstruktor haben, damit die Instanzierung von außen verhindert wird.
+```csharp
+public class ConfigurationManager : SingletonBase<ConfigurationManager>, 
+                                    ISingletonInitializable
+{
+    protected ConfigurationManager()
+    {
+    }
+
+    public string ApplicationName { get; private set; } = string.Empty;
+    public DateTime StartupTime { get; private set; }
+
+    public void Initialize()
+    {
+        Debug.WriteLine("Initialisierung läuft...");
+
+        // Beispielwerte erstellen
+        this.ApplicationName = "Meine NET 10 Anwendung";
+        this.StartupTime = DateTime.Now;
+
+        Debug.WriteLine("Initialisierung abgeschlossen");
+    }
+
+    public void Print()
+    {
+        Debug.WriteLine($"App: {ApplicationName}");
+        Debug.WriteLine($"Startup: {StartupTime}");
+    }
+}
+```
+
+Beispielhafte Verwendung der Singleton-Klasse ConfigurationManager. Beim ersten Zugriff auf die Instanz wird die Initialisierung automatisch durchgeführt, da die Klasse das ISingletonInitializable-Interface implementiert. Dadurch werden die Eigenschaften ApplicationName und StartupTime mit den entsprechenden Werten gefüllt, bevor sie verwendet werden.
+```csharp
+Debug.WriteLine("Vor erstem Zugriff");
+
+ConfigurationManager config = ConfigurationManager.Instance;
+
+Debug.WriteLine("Nach erstem Zugriff");
+config.Print();
+```
+
 ## StatusbarMain
 
 Die statische Klasse StatusbarMain bietet eine zentrale Anlaufstelle für die Verwaltung der Statusleiste in der WPF-Anwendung. Sie enthält eine statische Instanz der Statusbar, die von verschiedenen Teilen der Anwendung verwendet werden kann, um Informationen anzuzeigen oder zu aktualisieren.
@@ -167,6 +212,7 @@ StatusbarMain.Statusbar.Notification = "Bereit";
   * Settings
   * DialogPopup
   * IconButton
+  * Singleton
 
 ![Version](https://img.shields.io/badge/Version-1.0.2026.2-yellow.svg)
 - Migration auf NET 10

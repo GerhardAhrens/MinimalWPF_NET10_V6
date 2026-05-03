@@ -16,6 +16,7 @@
 namespace MinimalWPF
 {
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Windows;
 
     using MinimalWPF.Beispiele;

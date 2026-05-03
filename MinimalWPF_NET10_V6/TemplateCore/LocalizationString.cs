@@ -63,7 +63,7 @@ namespace System.Windows
 
             if (resourceDict == null)
             {
-                return $"ResourceDictionary 'TextString.xaml' nicht gefunden.";
+                return $"ResourceDictionary 'Localization.xaml' nicht gefunden.";
             }
 
             bool keyFound = resourceDict.Cast<DictionaryEntry>().Any(f => f.Key.ToString().Equals(key, StringComparison.OrdinalIgnoreCase));
@@ -83,7 +83,7 @@ namespace System.Windows
 
             if (resourceDict == null)
             {
-                return $"ResourceDictionary 'TextString.xaml' nicht gefunden.";
+                return $"ResourceDictionary 'Localization.xaml' nicht gefunden.";
             }
 
             bool keyFound = resourceDict.Cast<DictionaryEntry>().Any(f => f.Key.ToString().Equals(key, StringComparison.OrdinalIgnoreCase));
@@ -95,6 +95,25 @@ namespace System.Windows
             string value = resourceDict.Cast<DictionaryEntry>().FirstOrDefault(f => f.Key.ToString().Equals(key, StringComparison.OrdinalIgnoreCase)).Value.ToString();
 
             return string.Format(CultureInfo.CurrentCulture, value, args);
+        }
+
+        public static T Get<T>(string key)
+        {
+            ArgumentNullException.ThrowIfNull(key);
+            if (resourceDict == null)
+            {
+                throw new NotSupportedException($"ResourceDictionary 'Localization.xaml' nicht gefunden.");
+            }
+
+            bool keyFound = resourceDict.Cast<DictionaryEntry>().Any(f => f.Key.ToString().Equals(key, StringComparison.OrdinalIgnoreCase));
+            if (keyFound == false)
+            {
+                throw new NotSupportedException($"ResourceKey '{key}' nicht gefunden.");
+            }
+
+            object valueResult = resourceDict.Cast<DictionaryEntry>().FirstOrDefault(f => f.Key.ToString().Equals(key, StringComparison.OrdinalIgnoreCase)).Value;
+
+            return (T)valueResult;
         }
 
         public static void SetResources(string resourceFile)

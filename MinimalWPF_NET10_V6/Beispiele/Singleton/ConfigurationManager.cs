@@ -1,6 +1,7 @@
 ﻿namespace MinimalWPF.Beispiele
 {
     using System;
+    using System.Diagnostics;
     using System.Windows;
 
     public class ConfigurationManager : SingletonBase<ConfigurationManager>, ISingletonInitializable
@@ -14,19 +15,19 @@
 
         public void Initialize()
         {
-            Console.WriteLine("Initialisierung läuft...");
+            Debug.WriteLine("Initialisierung läuft...");
 
-            // Beispielwerte laden
-            ApplicationName = "Meine NET 10 Anwendung";
-            StartupTime = DateTime.Now;
+            // Beispielwerte erstellen
+            this.ApplicationName = "Meine NET 10 Anwendung";
+            this.StartupTime = DateTime.Now;
 
-            Console.WriteLine("Initialisierung abgeschlossen");
+            Debug.WriteLine("Initialisierung abgeschlossen");
         }
 
         public void Print()
         {
-            Console.WriteLine($"App: {ApplicationName}");
-            Console.WriteLine($"Startup: {StartupTime}");
+            Debug.WriteLine($"App: {this.ApplicationName}");
+            Debug.WriteLine($"Startup: {this.StartupTime}");
         }
     }
 }
