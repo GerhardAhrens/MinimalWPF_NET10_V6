@@ -25,21 +25,21 @@ namespace System.Windows
     using System.Runtime.Versioning;
 
     [SupportedOSPlatform("windows")]
-    public class LocalizationString
+    public class LocalizationValue
     {
         private const string DICTIONARYNAME = "Resources\\Localization\\Localization.xaml";
         private static ResourceDictionary resourceDict;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResourcesText"/> class.
+        /// Initializes a new instance of the <see cref="LocalizationValue"/> class.
         /// </summary>
-        static LocalizationString()
+        static LocalizationValue()
         {
             // Resources\Localization\Localization.xaml
             resourceDict = Application.Current.Resources.MergedDictionaries.Where(md => md.Source.OriginalString.EndsWith(DICTIONARYNAME,StringComparison.CurrentCulture)).FirstOrDefault();
         }
 
-        public LocalizationString()
+        public LocalizationValue()
         {
         }
 

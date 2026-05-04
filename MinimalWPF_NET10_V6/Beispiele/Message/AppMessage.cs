@@ -8,15 +8,15 @@
 
             try
             {
-                string msgBoxTitle = LocalizationString.Get("MessageExit_Titel_DE");
+                string msgBoxTitle = LocalizationValue.Get("MessageExit_Titel_DE");
                 if (args != null)
                 {
-                    string msgBoxDescription = LocalizationString.Get("MessageExit_Text_DE", args);
+                    string msgBoxDescription = LocalizationValue.Get("MessageExit_Text_DE", args);
                     result = MessageBox.Show(msgBoxDescription, msgBoxTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
                 }
                 else
                 {
-                    string msgBoxDescription = LocalizationString.Get("MessageExit_Text_DE");
+                    string msgBoxDescription = LocalizationValue.Get("MessageExit_Text_DE");
                     result = MessageBox.Show(msgBoxDescription, msgBoxTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
                 }
 

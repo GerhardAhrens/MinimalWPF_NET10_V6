@@ -16,8 +16,8 @@
 namespace MinimalWPF
 {
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.Windows;
+    using System.Windows.Controls;
 
     using MinimalWPF.Beispiele;
 
@@ -42,7 +42,7 @@ namespace MinimalWPF
             this.CloseInformationPopupCommand = new CommandBase(this.OnCloseInformation);
             this.CloseSettingsPopupCommand = new CommandBase(this.OnCloseSettingsPopup);
 
-            this.WindowTitel = LocalizationString.Get("WindowsTitelZeile");
+            this.WindowTitel = LocalizationValue.Get("WindowsTitelZeile");
             this.ApplikationVersion = base.ApplicationVersion.ToString();
             this.LaufzeitVersion = base.RuntimeVersion;
             this.WinVersion = base.WindowsVersion;

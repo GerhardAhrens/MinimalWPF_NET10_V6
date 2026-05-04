@@ -3,7 +3,7 @@
 ![NET](https://img.shields.io/badge/NET-10.0-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![VS2026](https://img.shields.io/badge/Visual%20Studio-2026-white.svg)
-![Version](https://img.shields.io/badge/Version-1.0.2026.0-yellow.svg)
+![Version](https://img.shields.io/badge/Version-1.0.2026.7-yellow.svg)
 
 Dieses Projekt ist ein einfaches WPF-Projekt Template für .NET 10.0, das die grundlegenden Komponenten für den Start einer WPF-Anwendung enthält. Es ist ideal für Entwickler, die schnell mit der Entwicklung von WPF-Anwendungen beginnen möchten.\
 <img src="MainWindow.png" style="width:650px;"/>
@@ -24,7 +24,8 @@ Die Verwendung des Template ist recht einfach, da dieses nur in ein Verzeichnis 
 - IconButton
 - Localization
 - Settings in JSON File (durch SettingsBase)
-- Singleton Funktionalität (Threadsicher Zugriff auf Instanzen durch Lazy<T>) mit Initalisierung durch ISingletonInitializable Interface.
+- Singleton Pattern Funktionalität (Threadsicher Zugriff auf Instanzen durch Lazy<T>) mit Initalisierung durch ISingletonInitializable Interface.
+- Factory Pattern für die Erstellung von Instanzen (Transient und Singleton)
 
 Alle Klassen für das Template sind unter dem Namespace `System.Windows` organisiert.
 
@@ -123,13 +124,19 @@ Die Settings werden unter `%AppData%\<Projektname>\Settings\Application.%usernam
 
 ```xml
 <system:String x:Key="WindowsTitelZeile">Minimal WPF Template NET 10; V6</system:String>
+<system:Int32 x:Key="EineZahl">42</system:Int32>
+<system:DateTime x:Key="EinDatum">2026-05-04</system:DateTime>
+<system:DateTime x:Key="EinDatumMitZeit">2026-05-04T14:45:00</system:DateTime>
 ```
 
 ```csharp
-this.WindowTitel = LocalizationString.Get("WindowsTitelZeile");
+this.WindowTitel = LocalizationValue.Get("WindowsTitelZeile");
+int zahl = LocalizationValue.Get<int>("EineZahl");
+DateTime datum1 = LocalizationValue.Get<DateTime>("EinDatum");
+DateTime datumMitZeit = LocalizationValue.Get<DateTime>("EinDatumMitZeit");
 ```
 
-## Singleton
+## Singleton Pattern
 
 Die SingletonBase-Klasse bietet eine threadsichere Implementierung des Singleton-Musters. Sie stellt sicher, dass nur eine Instanz einer Klasse erstellt wird und bietet optional eine Initialisierung über das ISingletonInitializable-Interface.
 Hinweis: Die Klasse muß einen `private` oder `protected` Konstruktor haben, damit die Instanzierung von außen verhindert wird.
@@ -206,6 +213,72 @@ Debug.WriteLine();
 config.Print();
 ```
 
+## Factory Pattern
+Eine **Factory-Klasse** bietet Methoden zur Erstellung von Instanzen von Klassen, entweder als Transient (neue Instanz bei jedem Aufruf) oder als Singleton (gleiche Instanz bei jedem Aufruf). Dadurch wird die Verwaltung von Abhängigkeiten und die Erstellung von Objekten in der Anwendung erleichtert.
+
+Als Beispiel eine Sammlung von Klassen, die von der `Factory` erstellt werden können. Die DashboardControl erhält eine Instanz von DataService über den Konstruktor, um die Abhängigkeit zu demonstrieren.
+```csharp
+public class DataService
+{
+    public Guid Id { get; } = Guid.NewGuid();
+}
+
+public class DashboardControl : UserControl
+{
+    public DataService Service { get; }
+
+    public DashboardControl(DataService service)
+    {
+        this.Service = service;
+
+        Debug.WriteLine($"Die Instanz {this.GetType().Name} erstellt | Service: {service.Id}");
+    }
+}
+
+public class LoginWindow : Window
+{
+    public LoginWindow()
+    {
+        Debug.WriteLine($"Die Instanz {this.GetType().Name} erstellt");
+    }
+}
+
+public class SingletonClass : SingletonBase<SingletonClass>
+{
+    public SingletonClass()
+    {
+        Debug.WriteLine($"Die Instanz {this.GetType().Name} erstellt");
+    }
+}
+
+public enum ViewId
+{
+    Dashboard,
+}
+
+public enum WindowId
+{
+    Login,
+}
+
+public enum NormalClassId
+{
+    SingletonClass,
+}
+```
+\
+In der Verwendung sieht die Erstellung und der Zugriff auf die Instanzen über die Factory wie folgt aus. Es wird eine Instanz von DataService erstellt, die an die DashboardControl übergeben wird. Die LoginWindow und SingletonClass werden als Singletons registriert, sodass bei jedem Zugriff die gleiche Instanz zurückgegeben wird.
+```csharp
+DataService service = new();
+Factory.RegisterTransient<ViewId>(ViewId.Dashboard, () => new DashboardControl(service));
+Factory.RegisterSingleton<WindowId>(WindowId.Login, () => new LoginWindow());
+Factory.RegisterSingleton<NormalClassId>(NormalClassId.SingletonClass, () => new SingletonClass());
+
+UserControl dashboard = Factory.Get<UserControl, ViewId>(ViewId.Dashboard);
+LoginWindow logWindow = Factory.Get<LoginWindow, WindowId>(WindowId.Login);
+SingletonClass normalClass = Factory.Get<SingletonClass, NormalClassId>(NormalClassId.SingletonClass);
+```
+
 ## StatusbarMain
 
 Die statische Klasse StatusbarMain bietet eine zentrale Anlaufstelle für die Verwaltung der Statusleiste in der WPF-Anwendung. Sie enthält eine statische Instanz der Statusbar, die von verschiedenen Teilen der Anwendung verwendet werden kann, um Informationen anzuzeigen oder zu aktualisieren.
@@ -240,12 +313,20 @@ StatusbarMain.Statusbar.DatabaseInfoTooltip = "Keine Datenbank verbunden";
 StatusbarMain.Statusbar.Notification = "Bereit";
 ```
 # Versionshistorie
+![Version](https://img.shields.io/badge/Version-1.0.2026.7-yellow.svg)
+- Weitere Basis Klassen für das Template
+  * Settings
+  * DialogPopup
+  * IconButton
+  * Singleton Pattern
+  * Factory Pattern
+
 ![Version](https://img.shields.io/badge/Version-1.0.2026.6-yellow.svg)
 - Weitere Basis Klassen für das Template
   * Settings
   * DialogPopup
   * IconButton
-  * Singleton
+  * Singleton Pattern
 
 ![Version](https://img.shields.io/badge/Version-1.0.2026.2-yellow.svg)
 - Migration auf NET 10

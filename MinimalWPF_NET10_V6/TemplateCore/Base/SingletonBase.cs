@@ -12,7 +12,7 @@
         /// <summary>
         /// Optionales Event nach erfolgreichem Reload
         /// </summary>
-        public event Action? Reloaded;
+        public event Action Reloaded;
 
         private static readonly Lazy<T> _instance =
             new Lazy<T>(() =>
