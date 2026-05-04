@@ -36,7 +36,18 @@ namespace System.Windows
         static LocalizationValue()
         {
             // Resources\Localization\Localization.xaml
-            resourceDict = Application.Current.Resources.MergedDictionaries.Where(md => md.Source.OriginalString.EndsWith(DICTIONARYNAME,StringComparison.CurrentCulture)).FirstOrDefault();
+            try
+            {
+                resourceDict = Application.Current.Resources.MergedDictionaries.Where(md => md.Source.OriginalString.EndsWith(DICTIONARYNAME, StringComparison.CurrentCulture)).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+                // 1. Pack-URI erstellen
+                // Format: pack://application:,,,/AssemblyName;component/PathTo/File.xaml
+                Uri resourceUri = new Uri($"/MinimalWPF.Test;component/{DICTIONARYNAME}", UriKind.Relative);
+                // 2. Dictionary laden
+                resourceDict = (ResourceDictionary)Application.LoadComponent(resourceUri);
+            }
         }
 
         public LocalizationValue()
