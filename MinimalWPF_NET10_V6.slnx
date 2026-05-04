@@ -5,5 +5,6 @@
     <File Path="README.md" />
     <File Path="Settings.png" />
   </Folder>
+  <Project Path="MinimalWPF.Test/MinimalWPF.Test.csproj" Id="09c36ae0-3b62-4934-b6f0-47167f5d45a4" />
   <Project Path="MinimalWPF_NET10_V6/MinimalWPF_NET10_V6.csproj" />
 </Solution>
