@@ -135,30 +135,46 @@ Die SingletonBase-Klasse bietet eine threadsichere Implementierung des Singleton
 Hinweis: Die Klasse muß einen `private` oder `protected` Konstruktor haben, damit die Instanzierung von außen verhindert wird.
 ```csharp
 public class ConfigurationManager : SingletonBase<ConfigurationManager>, 
-                                    ISingletonInitializable
+                                    ISingletonInitializable, 
+                                    ISingletonReloadable
 {
     protected ConfigurationManager()
     {
     }
 
     public string ApplicationName { get; private set; } = string.Empty;
-    public DateTime StartupTime { get; private set; }
+    public DateTime LastReload { get; private set; }
 
     public void Initialize()
     {
         Debug.WriteLine("Initialisierung läuft...");
 
         // Beispielwerte erstellen
-        this.ApplicationName = "Meine NET 10 Anwendung";
-        this.StartupTime = DateTime.Now;
+        this.LoadConfiguration();
 
         Debug.WriteLine("Initialisierung abgeschlossen");
     }
 
+    public void Reload()
+    {
+        Console.WriteLine("Reload gestartet...");
+
+        this.LoadConfiguration();
+
+        Console.WriteLine("Reload abgeschlossen");
+    }
+
     public void Print()
     {
-        Debug.WriteLine($"App: {ApplicationName}");
-        Debug.WriteLine($"Startup: {StartupTime}");
+        Debug.WriteLine($"App: {this.ApplicationName}");
+        Debug.WriteLine($"Startup: {this.LastReload}");
+    }
+
+    private void LoadConfiguration()
+    {
+        // Simuliert Laden aus Datei/DB/API
+        ApplicationName = $"App geladen: {DateTime.Now:T}";
+        LastReload = DateTime.Now;
     }
 }
 ```
@@ -167,9 +183,20 @@ Beispielhafte Verwendung der Singleton-Klasse ConfigurationManager. Beim ersten 
 ```csharp
 Debug.WriteLine("Vor erstem Zugriff");
 
-ConfigurationManager config = ConfigurationManager.Instance;
+var config = ConfigurationManager.Instance;
 
-Debug.WriteLine("Nach erstem Zugriff");
+config.Print();
+
+Debug.WriteLine();
+Debug.WriteLine("=== Reload ===");
+Debug.WriteLine();
+
+Thread.Sleep(2000);
+
+ConfigurationManager.ReloadInstance();
+
+Debug.WriteLine();
+
 config.Print();
 ```
 

@@ -2,8 +2,13 @@
 {
     using System;
 
+    using System.Diagnostics.CodeAnalysis;
+
+    [SuppressMessage("Design", "CA1000:Do not declare static members on generic types", Justification = "Generic Singleton Pattern")]
     public abstract class SingletonBase<T> where T : class
     {
+        private static readonly object _reloadLock = new();
+
         private static readonly Lazy<T> _instance =
             new Lazy<T>(() =>
             {
@@ -29,13 +34,34 @@
                 return obj;
             },System.Threading.LazyThreadSafetyMode.ExecutionAndPublication);
 
-#pragma warning disable CA1000 // Statische Member nicht in generischen Typen deklarieren
         public static T Instance => _instance.Value;
-#pragma warning restore CA1000 // Statische Member nicht in generischen Typen deklarieren
+
+        /// <summary>
+        /// Führt Reload auf der bestehenden Instanz aus.
+        /// </summary>
+        public static void ReloadInstance()
+        {
+            lock (_reloadLock)
+            {
+                if (_instance.Value is ISingletonReloadable reloadable)
+                {
+                    reloadable.ReloadContent();
+                }
+                else
+                {
+                    throw new InvalidOperationException($"{typeof(T).Name} implementiert IReloadable nicht.");
+                }
+            }
+        }
     }
 
     public interface ISingletonInitializable
     {
         void Initialize();
+    }
+
+    public interface ISingletonReloadable
+    {
+        void ReloadContent();
     }
 }

@@ -38,7 +38,7 @@
 
         public Type BaseType { get; set; }
 
-        public bool IsUCLoaded { get; set; } = false;
+        public bool IsUCLoaded { get; set; }
 
         public bool IsPropertyChanged
         {
