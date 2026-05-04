@@ -9,6 +9,11 @@
     {
         private static readonly object _reloadLock = new();
 
+        /// <summary>
+        /// Optionales Event nach erfolgreichem Reload
+        /// </summary>
+        public event Action? Reloaded;
+
         private static readonly Lazy<T> _instance =
             new Lazy<T>(() =>
             {
@@ -43,15 +48,32 @@
         {
             lock (_reloadLock)
             {
+                if (_instance.Value is not SingletonBase<T> singleton)
+                {
+                    throw new InvalidOperationException(
+                        $"{typeof(T).Name} muss von Singleton<{typeof(T).Name}> erben.");
+                }
+
                 if (_instance.Value is ISingletonReloadable reloadable)
                 {
                     reloadable.ReloadContent();
+
+                    singleton.OnReloaded();
                 }
                 else
                 {
-                    throw new InvalidOperationException($"{typeof(T).Name} implementiert IReloadable nicht.");
+                    throw new InvalidOperationException($"{typeof(T).Name} implementiert ISingletonReloadable nicht.");
                 }
             }
+        }
+
+        /// <summary>
+        /// Event auslösen
+        /// </summary>
+        protected virtual void OnReloaded()
+        {
+            var handler = Reloaded;
+            handler?.Invoke();
         }
     }
 

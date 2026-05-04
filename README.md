@@ -185,6 +185,12 @@ Debug.WriteLine("Vor erstem Zugriff");
 
 var config = ConfigurationManager.Instance;
 
+// Event abonnieren
+config.Reloaded += () =>
+{
+    Console.WriteLine(">>> Reload Event abonniert");
+};
+
 config.Print();
 
 Debug.WriteLine();
