@@ -12,6 +12,20 @@ Das Template soll als Grundlage für die Entwicklung von WPF-Anwendungen dienen 
 
 Hauptaufgabe des Templates ist es, eine solide Basis für die Entwicklung von WPF-Anwendungen als Prototyp zu bieten, damit Entwickler sich auf die Implementierung der spezifischen Funktionen ihrer Anwendung konzentrieren können, anstatt Zeit mit der Einrichtung der grundlegenden Struktur zu verbringen.
 
+# Inhaltsverzeichnis
+1. [Installation](#installation)
+1. [Features des Template](#features-des-template)
+1. [WindowBase](#windowbase)
+1. [Windows Titel Icon](#windows-titel-icon)
+1. [Binding Properties](#binding-properties)
+1. [CommandBase](#commandbase)
+1. [Settings](#settings)
+1. [Localization](#localization)
+1. [Singleton Pattern](#singleton-pattern)
+1. [Factory Pattern](#factory-pattern)
+1. [MessageBox Erweiterung](#messagebox-erweiterung)
+1. [StatusbarMain](#statusbarmain)
+
 # Installation
 Die Verwendung des Template ist recht einfach, da dieses nur in ein Verzeichnis kopiert werden muss, damit es in Visual Studio als Vorlage zur Verfügung steht. 
 
