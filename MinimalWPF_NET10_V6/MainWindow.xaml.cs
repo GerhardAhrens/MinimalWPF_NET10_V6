@@ -82,7 +82,7 @@ namespace MinimalWPF
             set => base.SetValue(value);
         }
 
-        public MessageBase Message { get; } = new MessageBase();
+        private MessageBase Message { get; } = new MessageBase();
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
@@ -169,99 +169,9 @@ namespace MinimalWPF
         }
     }
 
-    #region MessageBase
+    #region Message
     /*
-     * https://stackoverflow.com/questions/18325239/how-to-set-the-font-in-different-styles-for-message-box-in-wpf
-     */
-
-    public interface IMessageBase
-    {
-        MessageBoxResult ShowMessage(string titel, string message, MessageBoxButton mboxButton, MessageBoxImage icon, MessageBoxResult defaultResult);
-        MessageBoxResult ShowMessage(string titel, string message, bool withSound = false);
-        MessageBoxResult ShowMessage(string titel, string message);
-    }
-
-    public class MessageBase : IMessageBase
-    {
-        public Window CurrentOwner { get; private set; }
-
-        public MessageBoxResult ShowMessage(string titel, string message, MessageBoxButton mboxButton, MessageBoxImage icon, MessageBoxResult defaultResult)
-        {
-            MessageBoxResult result = MessageBox.Show(this.GetActiveWindow(), message, titel, mboxButton, icon, defaultResult, MessageBoxOptions.None);
-            return result;
-        }
-
-        public MessageBoxResult ShowMessage(string titel, string message, bool withSound = false)
-        {
-            MessageBoxResult result;
-
-            if (withSound == true)
-            {
-                result = MessageBox.Show(this.GetActiveWindow(), message, titel, MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.None);
-            }
-            else
-            {
-                result = MessageBox.Show(this.GetActiveWindow(), message, titel);
-            }
-
-            return result;
-        }
-
-        public MessageBoxResult ShowMessage(string titel, string message)
-        {
-            MessageBoxResult result;
-
-            result = MessageBox.Show(this.GetActiveWindow(), message, titel);
-
-            return result;
-        }
-
-        private Window GetActiveWindow()
-        {
-            Window owner = Application.Current.Windows.OfType<Window>().FirstOrDefault(f => f.IsActive == true);
-            if (owner == null)
-            {
-                owner = Application.Current.MainWindow;
-            }
-
-            this.CurrentOwner = owner;
-
-            return owner;
-        }
-    }
-
-    public static class MessageExtension
-    {
-        public static MessageBoxResult Hinweis(this IMessageBase self, string titel, string message, bool withSound = false)
-        {
-            MessageBoxResult result = self.ShowMessage(titel, message, withSound);
-            return result;
-        }
-
-        public static MessageBoxResult Question(this IMessageBase self, string titel, string message)
-        {
-            MessageBoxResult result = self.ShowMessage(titel, message, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
-            return result;
-        }
-
-        public static MessageBoxResult AppExitMessage(this IMessageBase self, string args = null)
-        {
-            MessageBoxResult result;
-
-            string msgBoxTitle = LocalizationValue.Get("MessageExit_Titel_DE");
-            if (args != null)
-            {
-                string msgBoxDescription = LocalizationValue.Get("MessageExit_Text_DE", args);
-                result = self.ShowMessage(msgBoxTitle, msgBoxDescription, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
-            }
-            else
-            {
-                string msgBoxDescription = LocalizationValue.Get("MessageExit_Text_DE");
-                result = self.ShowMessage(msgBoxTitle, msgBoxDescription, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
-            }
-
-            return result;
-        }
-    }
+    * https://stackoverflow.com/questions/18325239/how-to-set-the-font-in-different-styles-for-message-box-in-wpf
+    */
     #endregion
 }

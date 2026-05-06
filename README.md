@@ -1,13 +1,12 @@
 # MinimalWPF Projekt Template
 
-![NET](https://img.shields.io/badge/NET-10.0-green.svg)
+![NET](https://img.shields.io/badge/NET-10-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![VS2026](https://img.shields.io/badge/Visual%20Studio-2026-white.svg)
 ![Version](https://img.shields.io/badge/Version-1.0.2026.7-yellow.svg)
 
-Dieses Projekt ist ein einfaches WPF-Projekt Template für .NET 10.0, das die grundlegenden Komponenten für den Start einer WPF-Anwendung enthält. Es ist ideal für Entwickler, die schnell mit der Entwicklung von WPF-Anwendungen beginnen möchten.\
+Dieses Projekt ist ein einfaches WPF-Projekt Template für .NET 10, das die grundlegenden Komponenten und Funktionen für die schnelle Erstellung einer WPF-Anwendung enthält. Es ist ideal für Entwickler, die schnell mit der Entwicklung von WPF-Anwendungen beginnen möchten.\
 <img src="MainWindow.png" style="width:650px;"/>
-
 
 Das Template soll als Grundlage für die Entwicklung von WPF-Anwendungen dienen und enthält bereits einige nützliche Funktionen und Strukturen, die in vielen Anwendungen benötigt werden. Es ist so konzipiert, dass es leicht an die spezifischen Anforderungen eines Projekts angepasst werden kann.
 
@@ -26,6 +25,7 @@ Die Verwendung des Template ist recht einfach, da dieses nur in ein Verzeichnis 
 - Settings in JSON File (durch SettingsBase)
 - Singleton Pattern Funktionalität (Threadsicher Zugriff auf Instanzen durch Lazy<T>) mit Initalisierung durch ISingletonInitializable Interface.
 - Factory Pattern für die Erstellung von Instanzen (Transient und Singleton)
+- MessgeBox Erweiterung mit Fluent API
 
 Alle Klassen für das Template sind unter dem Namespace `System.Windows` organisiert.
 
@@ -278,6 +278,41 @@ UserControl dashboard = Factory.Get<UserControl, ViewId>(ViewId.Dashboard);
 LoginWindow logWindow = Factory.Get<LoginWindow, WindowId>(WindowId.Login);
 SingletonClass normalClass = Factory.Get<SingletonClass, NormalClassId>(NormalClassId.SingletonClass);
 ```
+## MessageBox Erweiterung
+Die MessageBox-Erweiterung bietet eine Fluent API zur Anzeige von MessageBoxen in der WPF-Anwendung. Sie ermöglicht es, verschiedene Optionen wie Titel, Text, Schaltflächen und Symbole auf einfache und lesbare Weise zu konfigurieren.
+
+Erstellen einer Instanz der MessageBox-Erweiterung. Diese Instanz muß immer in einem UserControl oder Window erstellt werden, da die Erweiterungsmethoden auf dem `IMessageBase`-Interface definiert sind, das von der `MessageBase`-Klasse implementiert wird.
+```csharp
+private MessageBase Message { get; } = new MessageBase();
+```
+
+```csharp
+MessageBoxResult msgYN = this.Message.AppExitMessage();
+```
+
+Die Funktion der MessageBox Erweiterung `AppExitMessage()` zeigt eine MessageBox mit einer Ja/Nein-Frage an, um den Benutzer zu fragen, ob er die Anwendung wirklich verlassen möchte. Je nach Antwort des Benutzers wird ein entsprechendes Ergebnis zurückgegeben, das in der Anwendung weiterverarbeitet werden kann.\
+**Wichtig:** Um die Erweiterungsmethode `AppExitMessage()` verwenden zu können, muss eine Instanz von `MessageBase` erstellt werden, da die Methode als Erweiterung für das `IMessageBase`-Interface definiert ist. Diese Instanz kann dann verwendet werden, um die MessageBox anzuzeigen und das Ergebnis zu verarbeiten.
+```csharp
+public static MessageBoxResult AppExitMessage(this IMessageBase self, string args = null)
+{
+    MessageBoxResult result;
+
+    string msgBoxTitle = LocalizationValue.Get("MessageExit_Titel_DE");
+    if (args != null)
+    {
+        string msgBoxDescription = LocalizationValue.Get("MessageExit_Text_DE", args);
+        result = self.ShowMessage(msgBoxTitle, msgBoxDescription, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+    }
+    else
+    {
+        string msgBoxDescription = LocalizationValue.Get("MessageExit_Text_DE");
+        result = self.ShowMessage(msgBoxTitle, msgBoxDescription, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+    }
+
+    return result;
+}
+}
+```
 
 ## StatusbarMain
 
@@ -320,6 +355,7 @@ StatusbarMain.Statusbar.Notification = "Bereit";
   * IconButton
   * Singleton Pattern
   * Factory Pattern
+  * MessageBox Erweiterung mit Fluent API
 
 ![Version](https://img.shields.io/badge/Version-1.0.2026.6-yellow.svg)
 - Weitere Basis Klassen für das Template

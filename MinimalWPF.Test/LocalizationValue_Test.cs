@@ -38,6 +38,32 @@
         public void GetStringWithoutParameter()
         {
             string stringValue = LocalizationValue.Get("WindowsTitelZeile");
+            
+            Assert.IsNotNull(stringValue, "Minimal WPF Template NET 10; V6");
+        }
+
+        [TestMethod]
+        public void GetStringWithParameter()
+        {
+            string stringValue = LocalizationValue.Get("MessageExit_Text_DE", "Parameter");
+
+            Assert.IsNotNull(stringValue, "Wollen Sie die Anwendung beenden? (Parameter)");
+        }
+
+        [TestMethod]
+        public void GetInteger()
+        {
+            int intValue = LocalizationValue.Get<int>("EineZahl");
+
+            Assert.AreEqual(42, intValue);
+        }
+
+        [TestMethod]
+        public void GetDateTime()
+        {
+            DateTime dateTimeValue = LocalizationValue.Get<DateTime>("EinDatumMitZeit");
+
+            Assert.AreEqual(new DateTime(2026,5,4,14,45,00), dateTimeValue);
         }
     }
 }
