@@ -40,7 +40,7 @@ namespace MinimalWPF
             this.SettingsCommand = new CommandBase(this.OnSettingsPopup);
             this.CloseInformationPopupCommand = new CommandBase(this.OnCloseInformation);
             this.CloseSettingsPopupCommand = new CommandBase(this.OnCloseSettingsPopup);
-            this.ShowMessageCommand = new CommandBase(() => _ = this.Message.Hinweis("Titel", "Nachricht",true));
+            this.ShowMessageCommand = new CommandBase(() => _ = this.Message.Hinweis("Titel", "Nachricht mit der MessageBox Erweiterung",true));
 
             this.WindowTitel = LocalizationValue.Get("WindowsTitelZeile");
             this.ApplikationVersion = base.ApplicationVersion.ToString();

@@ -4,7 +4,7 @@
     using System.Windows;
 
     [TestClass]
-    public sealed class LocalizationValue_Test
+    public sealed class LocalizationValue_Test : BaseTest
     {
         private const string DICTIONARYNAME = "Resources\\Localization\\Localization.xaml";
         private static ResourceDictionary resourceDict;
@@ -31,7 +31,7 @@
             string dicValue = resourceDict["WindowsTitelZeile"] as string;
 
             // 4. Assertion
-            Assert.IsNotNull(dicValue, "Resource konnte nicht gefunden werden.");
+            Assert.AreEqual("Resource konnte nicht gefunden werden.", dicValue);
         }
 
         [TestMethod]
@@ -39,7 +39,7 @@
         {
             string stringValue = LocalizationValue.Get("WindowsTitelZeile");
             
-            Assert.IsNotNull(stringValue, "Minimal WPF Template NET 10; V6");
+            Assert.AreEqual("Minimal WPF Template NET 10; V6", stringValue);
         }
 
         [TestMethod]
@@ -47,7 +47,7 @@
         {
             string stringValue = LocalizationValue.Get("MessageExit_Text_DE", "Parameter");
 
-            Assert.IsNotNull(stringValue, "Wollen Sie die Anwendung beenden? (Parameter)");
+            Assert.AreEqual("Wollen Sie die Anwendung beenden? (Parameter)", stringValue);
         }
 
         [TestMethod]

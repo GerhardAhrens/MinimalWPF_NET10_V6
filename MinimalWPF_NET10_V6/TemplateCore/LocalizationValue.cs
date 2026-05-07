@@ -38,15 +38,22 @@ namespace System.Windows
             // Resources\Localization\Localization.xaml
             try
             {
-                resourceDict = Application.Current.Resources.MergedDictionaries.Where(md => md.Source.OriginalString.EndsWith(DICTIONARYNAME, StringComparison.CurrentCulture)).FirstOrDefault();
+                if (Application.Current != null)
+                {
+                    resourceDict = Application.Current.Resources.MergedDictionaries.Where(md => md.Source.OriginalString.EndsWith(DICTIONARYNAME, StringComparison.CurrentCulture)).FirstOrDefault();
+                }
+                else
+                {
+                    // 1. Pack-URI erstellen
+                    // Format: pack://application:,,,/AssemblyName;component/PathTo/File.xaml
+                    Uri resourceUri = new Uri($"/MinimalWPF.Test;component/{DICTIONARYNAME}", UriKind.Relative);
+                    // 2. Dictionary laden
+                    resourceDict = (ResourceDictionary)Application.LoadComponent(resourceUri);
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // 1. Pack-URI erstellen
-                // Format: pack://application:,,,/AssemblyName;component/PathTo/File.xaml
-                Uri resourceUri = new Uri($"/MinimalWPF.Test;component/{DICTIONARYNAME}", UriKind.Relative);
-                // 2. Dictionary laden
-                resourceDict = (ResourceDictionary)Application.LoadComponent(resourceUri);
+                throw new NotSupportedException($"Die Resource Datei '{DICTIONARYNAME}' konnte nicht gefunden werden", ex);
             }
         }
 
