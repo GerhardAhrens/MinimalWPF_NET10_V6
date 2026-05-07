@@ -65,5 +65,23 @@
 
             Assert.AreEqual(new DateTime(2026,5,4,14,45,00), dateTimeValue);
         }
+
+        [DataRow("", "")]
+        [TestMethod]
+        public void DataRowInputTest(string input, string expected)
+        {
+        }
+
+        [TestMethod]
+        public void ExceptionTest()
+        {
+            try
+            {
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex.GetType() == typeof(Exception));
+            }
+        }
     }
 }

@@ -36,6 +36,7 @@
         [TestMethod]
         public void Singleton_Reload()
         {
+            DebugLine();
             var config = ConfigurationManager.Instance;
             Assert.IsNotNull(config);
             Assert.IsNotEmpty(config.ApplicationName);
@@ -48,13 +49,35 @@
 
             config.Modus = "Init";
             Assert.AreEqual("Init", config.Modus);
+            config.Print();
 
             Thread.Sleep(1000);
             ConfigurationManager.ReloadInstance();
+            config.Print();
             Assert.AreEqual(string.Empty, config.Modus);
+            DebugLine();
+        }
+
+        [DataRow("", "")]
+        [TestMethod]
+        public void DataRowInputTest(string input, string expected)
+        {
+        }
+
+        [TestMethod]
+        public void ExceptionTest()
+        {
+            try
+            {
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex.GetType() == typeof(Exception));
+            }
         }
     }
 
+    #region Singleton Beispiel Klasse
     public class ConfigurationManager : SingletonBase<ConfigurationManager>,
                                     ISingletonInitializable,
                                     ISingletonReloadable
@@ -90,6 +113,7 @@
         {
             Trace.WriteLine($"App: {this.ApplicationName}");
             Trace.WriteLine($"Startup: {this.LastReload}");
+            Trace.WriteLine($"Modus: {this.Modus}");
         }
 
         private void LoadConfiguration()
@@ -100,5 +124,5 @@
             Modus = string.Empty;
         }
     }
-
+    #endregion Singleton Beispiel Klasse
 }

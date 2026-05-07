@@ -1,13 +1,9 @@
 ﻿namespace MinimalWPF.Test
 {
     using System;
-    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Reflection;
-    using System.Runtime.InteropServices;
-    using System.Runtime.Loader;
-    using System.Text;
     using System.Threading;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -97,87 +93,10 @@
         {
             System.Diagnostics.Trace.WriteLine(message);
         }
-    }
 
-    public class ReaderLoadContext : AssemblyLoadContext
-    {
-        private AssemblyDependencyResolver _resolver;
-
-        public ReaderLoadContext(string readerLocation)
+        protected virtual void DebugLine(char symbol = '-', int length = 30)
         {
-            _resolver = new AssemblyDependencyResolver(readerLocation);
-        }
-
-        protected override Assembly Load(AssemblyName assemblyName)
-        {
-            string assemblyPath = _resolver.ResolveAssemblyToPath(assemblyName);
-            if (assemblyPath != null)
-            {
-                return LoadFromAssemblyPath(assemblyPath);
-            }
-
-            return null;
-        }
-
-        protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
-        {
-            string libraryPath = _resolver.ResolveUnmanagedDllToPath(unmanagedDllName);
-
-            if (libraryPath != null)
-            {
-                return LoadUnmanagedDllFromPath(libraryPath);
-            }
-
-            return IntPtr.Zero;
-        }
-    }
-
-    public class DebugTextWriter : TextWriter
-    {
-        public override Encoding Encoding
-        {
-            get { return Encoding.UTF8; }
-        }
-
-        public override void Write(char value)
-        {
-            Debug.Write(value);
-        }
-
-        public override void Write(string value)
-        {
-            Debug.Write(value);
-        }
-
-        public override void WriteLine(string value)
-        {
-            Debug.WriteLine(value);
-        }
-    }
-
-    public class OutputDebugStringTextWriter : TextWriter
-    {
-        [DllImport("kernel32.dll")]
-        static extern void OutputDebugString(string lpOutputString);
-
-        public override Encoding Encoding
-        {
-            get { return Encoding.UTF8; }
-        }
-
-        public override void Write(char value)
-        {
-            OutputDebugString(value.ToString());
-        }
-
-        public override void Write(string value)
-        {
-            OutputDebugString(value);
-        }
-
-        public override void WriteLine(string value)
-        {
-            OutputDebugString(value);
+            System.Diagnostics.Trace.WriteLine(new string(symbol, length));
         }
     }
 }
