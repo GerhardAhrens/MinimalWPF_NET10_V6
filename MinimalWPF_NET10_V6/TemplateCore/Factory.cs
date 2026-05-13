@@ -14,7 +14,14 @@
 
         public static int Count { get { return _registrations.Count; } }
 
-        public static string[] Names { get { return _registrations.Keys.Select(k => k.Key.ToString()).ToArray(); } }
+        public static string[] Names 
+        { 
+            get
+            {
+                string[] names = _registrations.Keys.Select(k => k.Key.ToString()).ToArray();
+                return names.OrderBy(n => n).ToArray(); 
+            } 
+        }
 
 
         // Registrierungseintrag
